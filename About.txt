@@ -1,0 +1,99 @@
+1. createStore - устаревший подход
+1-й параметр reducer
+2-й параметр middleware - applyMiddleWare
+
+===============================================================
+
+2. Перечисление типов action
+Можно указать typeof
+
+interface fetchUserAction {
+  type: typeof FETCH_USERS
+}
+
+interface fetchUsersActionSuccess {
+  type: typeof FETCH_USERS_SUCCESS,
+  payload: any[]
+}
+
+interface fetchUsersActionError {
+  type: typeof FETCH_USERS_ERROR,
+  payload: string
+}
+
+А можно сделать enum
+
+enum UserActionType {
+  FETCH_USERS = 'FETCH_USERS',
+  FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS',
+  FETCH_USERS_ERROR = 'FETCH_USERS_ERROR'
+}
+
+interface fetchUserAction {
+  type: UserActionType.FETCH_USERS
+}
+
+interface fetchUsersActionSuccess {
+  type: UserActionType.FETCH_USERS_SUCCESS,
+  payload: any[]
+}
+
+interface fetchUsersActionError {
+  type: UserActionType.FETCH_USERS_ERROR,
+  payload: string
+}
+
+type UserAction = fetchUserAction | fetchUsersActionSuccess | fetchUsersActionError
+
+==================================================================================
+
+3. Reducer до рефакторинга:
+
+interface UserState {
+  users: any[],
+  loading: boolean,
+  error: null | string
+}
+
+const initialState: UserState = {
+  users: [],
+  loading: false,
+  error: null,
+}
+
+enum UserActionType {
+  FETCH_USERS = 'FETCH_USERS',
+  FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS',
+  FETCH_USERS_ERROR = 'FETCH_USERS_ERROR'
+}
+
+interface fetchUserAction {
+  type: UserActionType.FETCH_USERS
+}
+
+interface fetchUsersActionSuccess {
+  type: UserActionType.FETCH_USERS_SUCCESS,
+  payload: any[]
+}
+
+interface fetchUsersActionError {
+  type: UserActionType.FETCH_USERS_ERROR,
+  payload: string
+}
+
+type UserAction = fetchUserAction | fetchUsersActionSuccess | fetchUsersActionError
+
+export const userReducer = (state = initialState, action: UserAction): UserState => {
+  switch (action.type) {
+    case UserActionType.FETCH_USERS:
+      return { users: [], loading: true, error: null }
+    case UserActionType.FETCH_USERS_SUCCESS:
+      return { users: action.payload, loading: false, error: null }
+    case UserActionType.FETCH_USERS_ERROR:
+      return { users: [], loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+===================================================================
