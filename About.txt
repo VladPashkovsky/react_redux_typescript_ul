@@ -1,3 +1,6 @@
+npx create-react-app . --template typescript
+npm i @types/react-redux redux react-redux redux-thunk axios
+
 1. createStore - устаревший подход
 1-й параметр reducer
 2-й параметр middleware - applyMiddleWare
